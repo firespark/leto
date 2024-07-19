@@ -1,101 +1,134 @@
 $(document).ready(function () {
     const applyButton = $('#applyBtn');
-    const startDateField = $('#startDate');
-    const endDateField = $('#endDate');
-    const fields = [startDateField, endDateField];
+    const startDateInput = $('#startDate');
+    const endDateInput = $('#endDate');
+    const errorMessage = $('#errorMessage');
+    const clearBtn = $('#clearBtn');
+    const dateRangeRadioCustom = $('#customDateRange');
+    const dateRangeRadioAllTime = $('#allTimeDateRange');
+    let startDate = new Date(1900, 0, 1);
+    let endDate = new Date();
 
-    function formatDate(date, type = 'short') {
+    function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-
-        if (type === 'full') {
-            return `${date.toLocaleString('ru', { year: "numeric", month: "long", day: "numeric" })}`;
-        }
-
         return `${year}-${month}-${day}`;
     }
 
-    function updateUrlWithDates(startDate, endDate) {
-        const dateUrl = `${window.location.pathname}${window.location.search}&${$.param({ 'start_date': formatDate(startDate), 'end_date': formatDate(endDate) })}`;
+    function updateUrl() {
+        const params = {
+            'load_capacity': $('#sel1').val(),
+            'body_type': $('#sel2').val(),
+            'start_date': formatDate(startDate),
+            'end_date': formatDate(endDate),
+            'utm_source': $('select[name="utm_source"]').val(),
+            'utm_medium': $('select[name="utm_medium"]').val(),
+            'utm_campaign': $('select[name="utm_campaign"]').val()
+        };
+
+        const dateUrl = `${window.location.pathname}${window.location.search}&${$.param(params)}`;
         window.location.href = dateUrl;
-    };
-
-
-    function validateDate(startDate, endDate) {
-        return startDate <= endDate;
     }
 
-    function areFieldsPopulated(fieldList) {
-        return fieldList.every(field => field.val() !== '');
+    function switchToCustomRange() {
+        dateRangeRadioCustom.prop('checked', true);
+        validateDates();
     }
 
-    function toggleApplyButton() {
-        areFieldsPopulated(fields) ? applyButton.show() : applyButton.hide();
+    function switchToAllTimeRange() {
+        dateRangeRadioAllTime.prop('checked', true);
+        startDate = new Date(1900, 0, 1);
+        endDate = new Date();
     }
+
+    function validateDates() {
+        const startDateValue = startDateInput.val();
+        const endDateValue = endDateInput.val();
+        const startDate = new Date(startDateValue);
+        const endDate = new Date(endDateValue);
+
+        if (!startDateValue || !endDateValue) {
+            errorMessage.text('Обе даты должны быть указаны');
+            applyButton.prop('disabled', true);
+        } else if (startDate > endDate) {
+            errorMessage.text('Начальная дата не может быть позже конечной даты');
+            applyButton.prop('disabled', true);
+        } else {
+            errorMessage.text('');
+            applyButton.prop('disabled', false);
+        }
+    }
+
+    function resetDateInputs() {
+        startDateInput.val('');
+        endDateInput.val('');
+    }
+
+    clearBtn.on('click', function () {
+        resetDateInputs();
+        errorMessage.text('');
+        switchToAllTimeRange();
+        applyButton.prop('disabled', false);
+    });
 
     $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true,
         language: 'ru'
+    }).on('changeDate', function (e) {
+        const selectedDate = e.date;
+        if ($(this).attr('id') === 'startDate') {
+            startDate = selectedDate;
+            startDateInput.val(formatDate(startDate));
+        } else if ($(this).attr('id') === 'endDate') {
+            endDate = selectedDate;
+            endDateInput.val(formatDate(endDate));
+        }
+        validateDates();
+        switchToCustomRange();
     });
 
-    $('input[name="dateRange"]').change(function () {
+    $('input[name="dateRange"]').on('change', function () {
         const currentDate = new Date();
-
-        let startDate, endDate, rangeText;
 
         switch ($(this).val()) {
             case 'allTime':
                 startDate = new Date(1900, 0, 1);
                 endDate = currentDate;
-                rangeText = 'Весь период';
                 break;
             case 'lastMonth':
                 startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
                 endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-                rangeText = 'Прошлый месяц';
                 break;
             case 'lastWeek':
                 const weekStart = currentDate.getDate() - currentDate.getDay() + 1;
                 startDate = new Date(currentDate.setDate(weekStart - 7));
                 endDate = new Date(currentDate.setDate(weekStart - 1));
-                rangeText = 'Прошлая неделя';
                 break;
-            case 'last24Hours':
-                startDate = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-                endDate = currentDate;
-                rangeText = 'Последние 24 часа';
+            case 'yesterday':
+                startDate = new Date(currentDate);
+                startDate.setDate(currentDate.getDate() - 1);
+                startDate.setHours(0, 0, 0, 0);
+
+                endDate = new Date(currentDate);
+                endDate.setDate(currentDate.getDate() - 1);
+                endDate.setHours(23, 59, 59, 999);
                 break;
+            case 'custom':
+                validateDates();
+                return;
             default:
                 return;
         }
 
-        updateUrlWithDates(startDate, endDate);
+        resetDateInputs();
+        errorMessage.text('');
+        applyButton.prop('disabled', false);
     });
 
-    $('#clearBtn').click(function () {
-        fields.forEach(field => field.val(''));
-        $('#errorMessage').text('');
-        toggleApplyButton();
+    applyButton.on('click', function () {
+        updateUrl();
+        errorMessage.text('');
     });
-
-    applyButton.click(function () {
-        const startDate = startDateField.datepicker('getDate');
-        const endDate = endDateField.datepicker('getDate');
-
-        if (!validateDate(startDate, endDate)) {
-            $('#errorMessage').text('Конечная дата не может быть раньше начальной');
-            return;
-        }
-
-        updateUrlWithDates(startDate, endDate);
-
-        $('#errorMessage').text('');
-    });
-
-    toggleApplyButton();
-
-    $('.datepicker').on('change', toggleApplyButton);
 });
-

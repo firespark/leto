@@ -22,7 +22,7 @@
 				<label for="sel1">Грузоподъемность:</label>
 				
 				<select class="form-control" id="sel1" autocomplete="off">
-					<option class="option_link" value="">Все</option>
+					<option class="option_link" value="All">Все</option>
 					<?php if(!empty($load_capacities)):?>
 					<?php foreach($load_capacities as $load_capacity):?>
 			
@@ -37,7 +37,7 @@
 				<label for="sel2">Тип кузова:</label>
 				
 				<select class="form-control" id="sel2"autocomplete="off">
-					<option class="option_link" value="">Все</option>
+					<option class="option_link" value="All">Все</option>
 					<?php if(!empty($body_types)):?>
 					<?php foreach($body_types as $body_type):?>
 			
@@ -54,8 +54,8 @@
 			<div class="form-group">
 				<label>utm_source:</label>
 				
-				<select class="form-control" autocomplete="off">
-					<option class="option_link">Все</option>
+				<select class="form-control" autocomplete="off" name="utm_source">
+					<option class="option_link" value="All">Все</option>
 					<option class="option_link" value="Unisender">Unisender</option>
 					<option class="option_link" value="Unisender">Yandex</option>
 				</select>
@@ -65,8 +65,8 @@
 			<div class="form-group">
 				<label>utm_medium:</label>
 				
-				<select class="form-control" autocomplete="off">
-					<option class="option_link">Все</option>
+				<select class="form-control" autocomplete="off" name="utm_medium">
+					<option class="option_link" value="All">Все</option>
 					<option class="option_link" value="cpc">cpc</option>
 					<option class="option_link" value="email">email</option>
 				</select>
@@ -76,8 +76,8 @@
 			<div class="form-group">
 				<label>utm_campaign:</label>
 				
-				<select class="form-control" autocomplete="off">
-					<option class="option_link">Все</option>
+				<select class="form-control" autocomplete="off" name="utm_campaign">
+					<option class="option_link" value="All">Все</option>
 					<option class="option_link" value="series-3">series-3</option>
 					<option class="option_link" value="111828952">111828952</option>
 				</select>
@@ -92,7 +92,7 @@
 				<div class="form-group mb-0">
 					
 					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="allTime"> Весь период
+						<input type="radio" name="dateRange" value="allTime" id="allTimeDateRange" checked> Весь период
 					</label>
 					<label class="radio-inline">
 						<input type="radio" name="dateRange" value="lastMonth"> Прошлый месяц
@@ -104,7 +104,7 @@
 						<input type="radio" name="dateRange" value="yesterday"> Вчера
 					</label>
 					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="custom" checked> Свой диапазон
+						<input type="radio" name="dateRange" value="custom" id="customDateRange"> Свой диапазон
 					</label>
 				</div>
 				
@@ -115,13 +115,12 @@
 						<input type="text" class="form-control datepicker" id="endDate" placeholder="До">
 					</div>
 					<button type="button" class="btn btn-secondary mr-2" id="clearBtn">Очистить</button>
-					<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
 					<div id="errorMessage"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<button type="button" class="btn btn-primary">Применить</button>
+	<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
 </div>
 
 
