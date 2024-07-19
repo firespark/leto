@@ -1,0 +1,1 @@
+<a href="#" data-goto=".page" class="top-link _icon-arrow-r-d" aria-label="Link to top"></a>
