@@ -12,12 +12,12 @@
 </form>
 <button id="deleteAllCalcPrices" class="btn btn-danger mb-3">Очистить таблицу</button>
 
-<div>
-	<h4>Фильтры</h4>
+<div class="filters">
+	<h4 class="text-center">Фильтры</h4>
 
-	<div class="d-flex">
-		<div>
-			<p><strong>Типы</strong></p>
+	<div class="filters-wrapper">
+		<div class="filters__inner">
+			<p class="text-center"><strong>Типы</strong></p>
 			<div class="form-group">
 				<label for="sel1">Грузоподъемность:</label>
 				
@@ -49,44 +49,8 @@
 			</div> 
 		</div>
 
-		<div>
-			<p><strong>Дата</strong></p>
-			<div class="date-filter">
-			
-				<div class="form-group mb-0">
-					
-					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="allTime"> Весь период
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="lastMonth"> Прошлый месяц
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="lastWeek"> Прошлая неделя
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="last24Hours"> Последние 24 часа
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="dateRange" value="custom" checked> Свой диапазон
-					</label>
-				</div>
-				
-				<div class="custom-date-range">
-					<div class="form-group mb-1">
-						<label for="startDate">Диапозон дат:</label>
-						<input type="text" class="form-control datepicker" id="startDate" placeholder="С">
-						<input type="text" class="form-control datepicker" id="endDate" placeholder="До">
-					</div>
-					<button type="button" class="btn btn-secondary mr-2" id="clearBtn">Очистить</button>
-					<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
-					<div id="errorMessage"></div>
-				</div>
-			</div>
-		</div>
-
-		<div>
-			<p><strong>Источники входа</strong></p>
+		<div class="filters__inner">
+			<p class="text-center"><strong>Источники входа</strong></p>
 			<div class="form-group">
 				<label>utm_source:</label>
 				
@@ -118,6 +82,42 @@
 					<option class="option_link" value="111828952">111828952</option>
 				</select>
 				
+			</div>
+		</div>
+
+		<div class="filters__inner">
+			<p class="text-center"><strong>Дата</strong></p>
+			<div class="date-filter">
+			
+				<div class="form-group mb-0">
+					
+					<label class="radio-inline">
+						<input type="radio" name="dateRange" value="allTime"> Весь период
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="dateRange" value="lastMonth"> Прошлый месяц
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="dateRange" value="lastWeek"> Прошлая неделя
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="dateRange" value="yesterday"> Вчера
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="dateRange" value="custom" checked> Свой диапазон
+					</label>
+				</div>
+				
+				<div class="custom-date-range">
+					<div class="form-group mb-1">
+						<label for="startDate">Диапозон дат:</label>
+						<input type="text" class="form-control datepicker" id="startDate" placeholder="С">
+						<input type="text" class="form-control datepicker" id="endDate" placeholder="До">
+					</div>
+					<button type="button" class="btn btn-secondary mr-2" id="clearBtn">Очистить</button>
+					<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
+					<div id="errorMessage"></div>
+				</div>
 			</div>
 		</div>
 	</div>
