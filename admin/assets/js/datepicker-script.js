@@ -6,7 +6,7 @@ $(document).ready(function () {
     const clearBtn = $('#clearBtn');
     const dateRangeRadioCustom = $('#customDateRange');
     const dateRangeRadioAllTime = $('#allTimeDateRange');
-    let startDate = new Date(1900, 0, 1);
+    let startDate = new Date(0);
     let endDate = new Date();
 
     function formatDate(date) {
@@ -54,7 +54,7 @@ $(document).ready(function () {
 
     function switchToAllTimeRange() {
         dateRangeRadioAllTime.prop('checked', true);
-        startDate = new Date(1900, 0, 1);
+        startDate = new Date(0);
         endDate = new Date();
     }
 
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
         switch ($(this).val()) {
             case 'allTime':
-                startDate = new Date(1900, 0, 1);
+                startDate = new Date(0);
                 endDate = currentDate;
                 break;
             case 'lastMonth':
