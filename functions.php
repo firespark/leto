@@ -1121,7 +1121,7 @@ function calc_prices_processing($active = null, $deleted = 0) {
     global $wpdb;
 
   
-    $results_per_page = 10;
+    $results_per_page = 100;
 
     
     $query_arr = get_query_calc_arr();    

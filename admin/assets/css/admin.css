@@ -145,6 +145,15 @@ table#clients td {
   max-width: 150px;
 }
 
+table#clients th.td-wide,
+table#clients td.td-wide {
+  min-width: 350px; 
+  max-width: 350px; 
+  word-break: break-word;
+}
+
+
+
 table#clients tr.inactive {
   background: #c1c1c1;
 }

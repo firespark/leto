@@ -1,0 +1,1 @@
+<button id="deleteAllCalcPrices" class="btn btn-danger mt-5">Очистить таблицу</button>
