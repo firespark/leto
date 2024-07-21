@@ -1129,6 +1129,8 @@ function calc_prices_processing($active = null, $deleted = 0) {
 
     if(!empty($query_arr)){
 
+        $get_par = '&' . implode('&', $query_arr);
+
         $query_arr[] = "deleted = $deleted";
 
         if($active === 1 || $active === 0) {
@@ -1140,7 +1142,7 @@ function calc_prices_processing($active = null, $deleted = 0) {
         $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE " . $query_str . " ORDER BY id DESC");
     
         $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
+        
         if($total_pages > 1){
 
             if ($_GET["paged"]) $paged  = $_GET["paged"];
@@ -1172,7 +1174,7 @@ function calc_prices_processing($active = null, $deleted = 0) {
         $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE " . $search_sql . " ORDER BY id DESC");
     
         $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
+        $get_par = '&search=' . $_GET['search'];
         if($total_pages > 1){
 
             if ($_GET["paged"]) $paged  = $_GET["paged"];
@@ -1216,12 +1218,18 @@ function calc_prices_processing($active = null, $deleted = 0) {
 
     $load_capacities = $wpdb->get_results("SELECT DISTINCT load_capacity FROM " . $wpdb->prefix . "calc_prices");
     $body_types = $wpdb->get_results("SELECT DISTINCT body_type FROM " . $wpdb->prefix . "calc_prices");
+    $utm_sources = $wpdb->get_results("SELECT DISTINCT utm_source FROM " . $wpdb->prefix . "calc_prices");
+    $utm_mediums = $wpdb->get_results("SELECT DISTINCT utm_medium FROM " . $wpdb->prefix . "calc_prices");
+    $utm_campaigns = $wpdb->get_results("SELECT DISTINCT utm_campaign FROM " . $wpdb->prefix . "calc_prices");
 
     return [
         'calc_prices' => $calc_prices,
         'navi' => $navi,
         'load_capacities' => $load_capacities,
         'body_types' => $body_types,
+        'utm_sources' => $utm_sources,
+        'utm_mediums' => $utm_mediums,
+        'utm_campaigns' => $utm_campaigns,
     ];
 
 }
@@ -1235,6 +1243,9 @@ function calc_prices_display(){
     $navi = $arr['navi'];
     $load_capacities = $arr['load_capacities'];
     $body_types = $arr['body_types'];
+    $utm_sources = $arr['utm_sources'];
+    $utm_mediums = $arr['utm_mediums'];
+    $utm_campaigns = $arr['utm_campaigns'];
  
     include 'admin/calc_prices_file.php';
 }
@@ -1248,6 +1259,9 @@ function calc_prices_cart(){
     $navi = $arr['navi'];
     $load_capacities = $arr['load_capacities'];
     $body_types = $arr['body_types'];
+    $utm_sources = $arr['utm_sources'];
+    $utm_mediums = $arr['utm_mediums'];
+    $utm_campaigns = $arr['utm_campaigns'];
  
     include 'admin/calc_prices_file.php';
 }
@@ -1261,6 +1275,9 @@ function calc_prices_active(){
     $navi = $arr['navi'];
     $load_capacities = $arr['load_capacities'];
     $body_types = $arr['body_types'];
+    $utm_sources = $arr['utm_sources'];
+    $utm_mediums = $arr['utm_mediums'];
+    $utm_campaigns = $arr['utm_campaigns'];
  
     include 'admin/calc_prices_file.php';
 }
@@ -1274,6 +1291,9 @@ function calc_prices_inactive(){
     $navi = $arr['navi'];
     $load_capacities = $arr['load_capacities'];
     $body_types = $arr['body_types'];
+    $utm_sources = $arr['utm_sources'];
+    $utm_mediums = $arr['utm_mediums'];
+    $utm_campaigns = $arr['utm_campaigns'];
  
     include 'admin/calc_prices_file.php';
 }
