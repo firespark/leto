@@ -22,7 +22,7 @@
 				<label for="sel1">Грузоподъемность:</label>
 				
 				<select class="form-control" id="sel1" autocomplete="off">
-					<option class="option_link" value="All">Все</option>
+					<option class="option_link" value="0">Все</option>
 					<?php if(!empty($load_capacities)):?>
 					<?php foreach($load_capacities as $load_capacity):?>
 			
@@ -37,7 +37,7 @@
 				<label for="sel2">Тип кузова:</label>
 				
 				<select class="form-control" id="sel2"autocomplete="off">
-					<option class="option_link" value="All">Все</option>
+					<option class="option_link" value="0">Все</option>
 					<?php if(!empty($body_types)):?>
 					<?php foreach($body_types as $body_type):?>
 			
@@ -55,7 +55,7 @@
 				<label>utm_source:</label>
 				
 				<select class="form-control" autocomplete="off" name="utm_source">
-					<option class="option_link" value="All">Все</option>
+					<option class="option_link" value="0">Все</option>
 					<option class="option_link" value="Unisender">Unisender</option>
 					<option class="option_link" value="Unisender">Yandex</option>
 				</select>
@@ -66,7 +66,7 @@
 				<label>utm_medium:</label>
 				
 				<select class="form-control" autocomplete="off" name="utm_medium">
-					<option class="option_link" value="All">Все</option>
+					<option class="option_link" value="0">Все</option>
 					<option class="option_link" value="cpc">cpc</option>
 					<option class="option_link" value="email">email</option>
 				</select>
@@ -77,7 +77,7 @@
 				<label>utm_campaign:</label>
 				
 				<select class="form-control" autocomplete="off" name="utm_campaign">
-					<option class="option_link" value="All">Все</option>
+					<option class="option_link" value="0">Все</option>
 					<option class="option_link" value="series-3">series-3</option>
 					<option class="option_link" value="111828952">111828952</option>
 				</select>
@@ -121,6 +121,7 @@
 		</div>
 	</div>
 	<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
+	<a type="button" class="btn btn-warning" href="/wp-admin/admin.php?page=test_view">Очистить фильтры</a>
 </div>
 
 

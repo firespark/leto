@@ -1083,11 +1083,11 @@ function cargo_import_view(){
 }
 
 // Записи калькулятора
-function calc_prices_display(){
+/*function calc_prices_display(){
     global $wpdb;
 
   
-    $results_per_page = 100;
+    $results_per_page = 10;
 
     if($_GET['load_capacity']){
         
@@ -1186,6 +1186,147 @@ function calc_prices_display(){
     $body_types = $wpdb->get_results("SELECT DISTINCT body_type FROM " . $wpdb->prefix . "calc_prices");
  
     include 'admin/calc_prices_file.php';
+}*/
+
+function get_query_arr() {
+    $query_arr = [];
+
+    if( isset($_GET['load_capacity']) && $_GET['load_capacity'] ) {
+        $query_arr[] = "load_capacity = '" . $_GET['load_capacity'] . "'";
+    }
+
+    if( isset($_GET['body_type']) && $_GET['body_type'] ) {
+        $query_arr[] = "body_type = '" . $_GET['body_type'] . "'";
+    }
+
+    if( isset($_GET['start_date']) && $_GET['start_date'] ) {
+        $query_arr[] = "create_date >= '" . $_GET['start_date'] . "'";
+    } 
+    
+    if( isset($_GET['end_date']) && $_GET['end_date'] ) {
+        $query_arr[] = "create_date <= '" . $_GET['end_date'] . "'";
+    }
+
+    if( isset($_GET['utm_source']) && $_GET['utm_source'] ) {
+        $query_arr[] = "utm_source = '" . $_GET['utm_source'] . "'";
+    }
+
+    if( isset($_GET['utm_medium']) && $_GET['utm_medium'] ) {
+        $query_arr[] = "utm_medium = '" . $_GET['utm_medium'] . "'";
+    }
+
+    if( isset($_GET['utm_campaign']) && $_GET['utm_campaign'] ) {
+        $query_arr[] = "utm_campaign = '" . $_GET['utm_campaign'] . "'";
+    }
+
+    return $query_arr;
+}
+
+function calc_prices_processing() {
+    global $wpdb;
+
+  
+    $results_per_page = 10;
+
+    
+    $query_arr = get_query_arr();    
+
+
+    if(!empty($query_arr)){
+
+        $query_arr[] = "deleted = 0";
+        
+        $query_str = implode(' AND ', $query_arr);
+
+        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE " . $query_str . " ORDER BY id DESC");
+    
+        $total_pages = ceil($total_pages/$results_per_page);
+        $get_par = '';
+        if($total_pages > 1){
+
+            if ($_GET["paged"]) $paged  = $_GET["paged"];
+            else $paged=1; 
+            $start_from = ($paged-1) * $results_per_page;
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE " . $query_str . " ORDER BY id DESC LIMIT $start_from,$results_per_page");
+            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
+        }
+        else {
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE " . $query_str . " ORDER BY id DESC");
+            $navi = '';
+        }
+    }
+
+    
+    elseif(isset($_GET['search']) && $_GET['search']){
+        $search = $_GET['search'];
+
+        $search_sql = "deleted = 0 AND
+            (point1 LIKE '%" . $search . "%' OR 
+            point2 LIKE '%" . $search . "%' OR 
+            fias1 LIKE '%" . $search . "%' OR 
+            fias2 LIKE '%" . $search . "%')";
+
+        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE " . $search_sql . " ORDER BY id DESC");
+    
+        $total_pages = ceil($total_pages/$results_per_page);
+        $get_par = '';
+        if($total_pages > 1){
+
+            if ($_GET["paged"]) $paged  = $_GET["paged"];
+            else $paged=1; 
+            $start_from = ($paged-1) * $results_per_page;
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE " . $search_sql .
+            " ORDER BY id DESC LIMIT $start_from, $results_per_page");
+            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
+        }
+        else {
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE " . $search_sql . " ORDER BY id DESC");
+            $navi = '';
+        }
+    }
+    
+    else {
+
+        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC");
+        
+        $total_pages = ceil($total_pages/$results_per_page);
+        $get_par = '';
+        if($total_pages > 1){
+
+            if (isset($_GET["paged"]) && $_GET["paged"]) $paged  = $_GET["paged"];
+            else $paged=1; 
+            $start_from = ($paged-1) * $results_per_page;
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC LIMIT $start_from,$results_per_page");
+            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
+        }
+        else {
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC");
+            $navi = '';
+        }
+    }
+
+    $load_capacities = $wpdb->get_results("SELECT DISTINCT load_capacity FROM " . $wpdb->prefix . "calc_prices");
+    $body_types = $wpdb->get_results("SELECT DISTINCT body_type FROM " . $wpdb->prefix . "calc_prices");
+
+    return [
+        'calc_prices' => $calc_prices,
+        'navi' => $navi,
+        'load_capacities' => $load_capacities,
+        'body_types' => $body_types,
+    ];
+
+}
+
+function calc_prices_display(){
+    
+    $arr = calc_prices_processing();
+
+    $calc_prices = $arr['calc_prices'];
+    $navi = $arr['navi'];
+    $load_capacities = $arr['load_capacities'];
+    $body_types = $arr['body_types'];
+ 
+    include 'admin/calc_prices_file.php';
 }
 
 //Страница Записи калькулятора в админ панели
@@ -1204,123 +1345,7 @@ function calc_prices_view(){
 }
 
 
-function test_display(){
-    global $wpdb;
 
-  
-    $results_per_page = 100;
-
-    if(isset($_GET['load_capacity']) && $_GET['load_capacity']){
-        
-        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE load_capacity = '" . $_GET['load_capacity'] . "'");
-    
-        $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
-        if($total_pages > 1){
-
-            if ($_GET["paged"]) $paged  = $_GET["paged"];
-            else $paged=1; 
-            $start_from = ($paged-1) * $results_per_page;
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE load_capacity = '" . $_GET['load_capacity'] . "' LIMIT $start_from,$results_per_page");
-            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
-        }
-        else {
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE load_capacity = '" . $_GET['load_capacity'] . "'");
-            $navi = '';
-        }
-    }
-
-    elseif(isset($_GET['body_type']) && $_GET['body_type']){
-        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE body_type = '" . $_GET['body_type'] . "'");
-    
-        $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
-        if($total_pages > 1){
-
-            if ($_GET["paged"]) $paged  = $_GET["paged"];
-            else $paged=1; 
-            $start_from = ($paged-1) * $results_per_page;
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE body_type = '" . $_GET['body_type'] . "' LIMIT $start_from,$results_per_page");
-            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
-        }
-        else {
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE body_type = '" . $_GET['body_type'] . "'");
-            $navi = '';
-        }
-    }
-    elseif(isset($_GET['search']) && $_GET['search']){
-        $search = $_GET['search'];
-        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE 
-            point1 LIKE '%" . $search . "%' OR 
-            point2 LIKE '%" . $search . "%' OR 
-            fias1 LIKE '%" . $search . "%' OR 
-            fias2 LIKE '%" . $search . "%'
-        ");
-    
-        $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
-        if($total_pages > 1){
-
-            if ($_GET["paged"]) $paged  = $_GET["paged"];
-            else $paged=1; 
-            $start_from = ($paged-1) * $results_per_page;
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE 
-                point1 LIKE '%" . $search . "%' OR 
-                point2 LIKE '%" . $search . "%' OR 
-                fias1 LIKE '%" . $search . "%' OR 
-                fias2 LIKE '%" . $search . "%' 
-            LIMIT $start_from, $results_per_page");
-            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
-        }
-        else {
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE 
-                point1 LIKE '%" . $search . "%' OR 
-                point2 LIKE '%" . $search . "%' OR 
-                fias1 LIKE '%" . $search . "%' OR 
-                fias2 LIKE '%" . $search . "%' 
-            ");
-            $navi = '';
-        }
-    }
-    
-    else {
-
-        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices");
-        
-        $total_pages = ceil($total_pages/$results_per_page);
-        $get_par = '';
-        if($total_pages > 1){
-
-            if (isset($_GET["paged"]) && $_GET["paged"]) $paged  = $_GET["paged"];
-            else $paged=1; 
-            $start_from = ($paged-1) * $results_per_page;
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices LIMIT $start_from,$results_per_page");
-            $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
-        }
-        else {
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices");
-            $navi = '';
-        }
-    }
-
-    $load_capacities = $wpdb->get_results("SELECT DISTINCT load_capacity FROM " . $wpdb->prefix . "calc_prices");
-    $body_types = $wpdb->get_results("SELECT DISTINCT body_type FROM " . $wpdb->prefix . "calc_prices");
- 
-    include 'admin/test_file.php';
-}
-
-add_action('admin_menu', 'test_view');
-function test_view(){
-    $page_title = 'Test';
-    $menu_title = 'Test';
-    $capability = 'edit_posts';
-    $menu_slug = 'test_view';
-    $function = 'test_display';
-    $icon_url = '';
-    $position = 23;
-
-    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position);
-}
 
 
 
@@ -1514,14 +1539,15 @@ function upload_allow_types( $mimes ) {
     return $mimes;
 }
 
-delete_calc_prices($optionsArr['main_calc_price_days']);
+inactive_calc_prices($optionsArr['main_calc_price_days']);
 
-function delete_calc_prices($main_calc_price_days) {
+function inactive_calc_prices($main_calc_price_days) {
     global $wpdb;
   
-    $delete_date = date('Y-m-d', strtotime("-" . $main_calc_price_days . " DAYS"));
+    $inactive_date = date('Y-m-d', strtotime("-" . $main_calc_price_days . " DAYS"));
 
-    $wpdb->query("DELETE FROM " . $wpdb->prefix. "calc_prices WHERE create_date < '" . $delete_date . "'");
+    $wpdb->query("UPDATE " . $wpdb->prefix. "calc_prices SET active = 0 WHERE create_date < '" . $inactive_date . "'");
+    $wpdb->query("UPDATE " . $wpdb->prefix. "calc_prices SET active = 1 WHERE create_date >= '" . $inactive_date . "'");
 }
 
 function is_phone_custom($phone) {
