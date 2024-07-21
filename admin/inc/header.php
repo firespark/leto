@@ -7,4 +7,4 @@
 <script type="text/javascript" src="<?php echo get_site_url();?>/wp-content/themes/leto/admin/assets/js/admin.js?v=<?php echo rand(100,100000000);?>"></script>
 <script src="<?php echo get_site_url(); ?>/wp-content/themes/leto/admin/assets/js/bootstrap-datepicker.min.js"></script>
 <script src="<?php echo get_site_url(); ?>/wp-content/themes/leto/admin/assets/js/bootstrap-datepicker.ru.min.js"></script>
-<script src="<?php echo get_site_url(); ?>/wp-content/themes/leto/admin/assets/js/datepicker-script.js?v=8"></script>
+<script src="<?php echo get_site_url(); ?>/wp-content/themes/leto/admin/assets/js/datepicker-script.js?v=9"></script>
