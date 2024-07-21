@@ -27,8 +27,14 @@ $(document).ready(function () {
             'utm_campaign': $('select[name="utm_campaign"]').val()
         };
 
-        const dateUrl = `${window.location.pathname}${window.location.search}&${$.param(params)}`;
-        window.location.href = dateUrl;
+        let url = window.location.href;
+        url = url.replace(/[&?]paged=\d+/, '');
+
+        const newParams = $.param(params);
+        const separator = url.includes('?') ? '&' : '?';
+        const newUrl = `${url}${separator}${newParams}`;
+
+        window.location.href = newUrl;
     }
 
     function switchToCustomRange() {
