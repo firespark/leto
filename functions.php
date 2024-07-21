@@ -1222,7 +1222,7 @@ function get_query_arr() {
     return $query_arr;
 }
 
-function calc_prices_processing() {
+function calc_prices_processing($active = null, $deleted = 0) {
     global $wpdb;
 
   
@@ -1234,7 +1234,11 @@ function calc_prices_processing() {
 
     if(!empty($query_arr)){
 
-        $query_arr[] = "deleted = 0";
+        $query_arr[] = "deleted = $deleted";
+
+        if($active === 1 || $active === 0) {
+            $query_arr[] = "active = $active";
+        }
         
         $query_str = implode(' AND ', $query_arr);
 
@@ -1260,11 +1264,15 @@ function calc_prices_processing() {
     elseif(isset($_GET['search']) && $_GET['search']){
         $search = $_GET['search'];
 
-        $search_sql = "deleted = 0 AND
+        $search_sql = "deleted = $deleted AND
             (point1 LIKE '%" . $search . "%' OR 
             point2 LIKE '%" . $search . "%' OR 
             fias1 LIKE '%" . $search . "%' OR 
             fias2 LIKE '%" . $search . "%')";
+        
+        if($active === 1 || $active === 0) {
+            $search_sql .= " AND active = $active";
+        }
 
         $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE " . $search_sql . " ORDER BY id DESC");
     
@@ -1287,7 +1295,13 @@ function calc_prices_processing() {
     
     else {
 
-        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC");
+        $sql_str = "deleted = $deleted";
+
+        if($active === 1 || $active === 0) {
+            $sql_str .= " AND active = $active";
+        }
+
+        $total_pages = $wpdb->get_var("SELECT COUNT(*) FROM " . $wpdb->prefix . "calc_prices WHERE $sql_str ORDER BY id DESC");
         
         $total_pages = ceil($total_pages/$results_per_page);
         $get_par = '';
@@ -1296,11 +1310,11 @@ function calc_prices_processing() {
             if (isset($_GET["paged"]) && $_GET["paged"]) $paged  = $_GET["paged"];
             else $paged=1; 
             $start_from = ($paged-1) * $results_per_page;
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC LIMIT $start_from,$results_per_page");
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE $sql_str ORDER BY id DESC LIMIT $start_from,$results_per_page");
             $navi = pagination_cargos('calc_prices_view', $paged, $get_par, $total_pages);
         }
         else {
-            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE deleted = 0 ORDER BY id DESC");
+            $calc_prices = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "calc_prices WHERE $sql_str ORDER BY id DESC");
             $navi = '';
         }
     }
@@ -1321,6 +1335,46 @@ function calc_prices_display(){
     
     $arr = calc_prices_processing();
 
+    $title = 'Цены калькулятора';
+    $calc_prices = $arr['calc_prices'];
+    $navi = $arr['navi'];
+    $load_capacities = $arr['load_capacities'];
+    $body_types = $arr['body_types'];
+ 
+    include 'admin/calc_prices_file.php';
+}
+
+function calc_prices_cart(){
+    
+    $arr = calc_prices_processing(null, 1);
+
+    $title = 'Корзина';
+    $calc_prices = $arr['calc_prices'];
+    $navi = $arr['navi'];
+    $load_capacities = $arr['load_capacities'];
+    $body_types = $arr['body_types'];
+ 
+    include 'admin/calc_prices_file.php';
+}
+
+function calc_prices_active(){
+    
+    $arr = calc_prices_processing(1);
+
+    $title = 'Цены калькулятора - Активные';
+    $calc_prices = $arr['calc_prices'];
+    $navi = $arr['navi'];
+    $load_capacities = $arr['load_capacities'];
+    $body_types = $arr['body_types'];
+ 
+    include 'admin/calc_prices_file.php';
+}
+
+function calc_prices_inactive(){
+    
+    $arr = calc_prices_processing(0);
+
+    $title = 'Цены калькулятора - Неактивные';
     $calc_prices = $arr['calc_prices'];
     $navi = $arr['navi'];
     $load_capacities = $arr['load_capacities'];
@@ -1332,6 +1386,7 @@ function calc_prices_display(){
 //Страница Записи калькулятора в админ панели
 
 add_action('admin_menu', 'calc_prices_view');
+
 function calc_prices_view(){
     $page_title = 'Записи калькулятора';
     $menu_title = 'Записи калькулятора';
@@ -1342,10 +1397,38 @@ function calc_prices_view(){
     $position = 23;
 
     add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position);
+
+    add_submenu_page( 
+        'calc_prices_view', 
+        'Активные', 
+        'Активные', 
+        'edit_posts', 
+        'calc_prices_active', 
+        'calc_prices_active', 
+        1 
+    );
+
+    add_submenu_page( 
+        'calc_prices_view', 
+        'Неактивные', 
+        'Неактивные', 
+        'edit_posts', 
+        'calc_prices_inactive', 
+        'calc_prices_inactive', 
+        2 
+    );
+    
+    add_submenu_page( 
+        'calc_prices_view', 
+        'Корзина', 
+        'Корзина', 
+        'edit_posts', 
+        'calc_prices_cart', 
+        'calc_prices_cart', 
+        3 
+    );
+
 }
-
-
-
 
 
 
