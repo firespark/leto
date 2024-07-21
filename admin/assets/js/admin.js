@@ -272,7 +272,7 @@ $(document).ready(function () {
 					url: "/wp-content/themes/leto/admin/scripts/remove_all_calc_prices_ajax.php",
 					success: function(data) {
 						if(data == 1){
-							$(".trLine").fadeOut();
+							window.location.reload();
 						}
 						else alert(data);
 						

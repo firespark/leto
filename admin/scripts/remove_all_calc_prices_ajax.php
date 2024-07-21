@@ -10,7 +10,7 @@
         echo 1;
     }*/
     
-    if ($wpdb->update( $wpdb->prefix . 'calc_prices', [ 'deleted' => 1 ], [ 'id' >= 0 ] )) {
+    if ($wpdb->query("UPDATE " . $wpdb->prefix. "calc_prices SET deleted = 1 WHERE 1")){
         echo 1;
     }
     else {

@@ -41,7 +41,8 @@ if(!empty($_POST)) {
         $calc_price = NULL;
 
         if($route_begin_fiasId && $route_end_fiasId) {
-            $calc_price = $wpdb->get_var("SELECT price FROM " . $wpdb->prefix . "calc_prices WHERE load_capacity = '" . $load_capacity . "' AND body_type = '" . $body_type . "' AND fias1 = '" . $route_begin_fiasId . "' AND fias2 = '" . $route_end_fiasId . "'");
+            $calc_price = $wpdb->get_var("SELECT price FROM " . $wpdb->prefix . "calc_prices WHERE active = 1 AND deleted = 0 AND load_capacity = '" . $load_capacity . "' AND body_type = '" . $body_type . "' AND fias1 = '" . $route_begin_fiasId . "' AND fias2 = '" . $route_end_fiasId . "'");
+            
         }
 
 
