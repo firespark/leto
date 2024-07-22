@@ -3,7 +3,7 @@
 <h1><?php echo $title;?></h1>
 
 <?php 
-include 'inc/calc_prices_search.php';
+//include 'inc/calc_prices_search.php';
 
 if (!isset($_GET['search']) && !$_GET['search']) {
 	include 'inc/calc_prices_filters.php';
@@ -13,7 +13,7 @@ if (!isset($_GET['search']) && !$_GET['search']) {
 
 <div class="calc-prices__links">
 	<?php include 'inc/calc_prices_links.php'; ?>
-	<?php include 'inc/calc_prices_delete_many.php'; ?>
+	<?php include 'inc/calc_prices_delete_many_cart.php'; ?>
 	
 </div>
 
@@ -23,4 +23,4 @@ include 'inc/calc_prices_table.php';
 
 include 'inc/calc_prices_pagination.php';
 
-include 'inc/calc_prices_clear_table.php';
+include 'inc/calc_prices_clear_cart.php';

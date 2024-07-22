@@ -286,6 +286,28 @@ $(document).ready(function () {
 
 	});
 
+	$('#deleteAllCalcPricesTotally').click(function(){
+		if (confirm("Внимание! Это действие удалит все записи в корзине навсегда")) {
+			
+			$.ajax({
+					type: "GET",
+					url: "/wp-content/themes/leto/admin/scripts/remove_all_calc_prices_totally_ajax.php",
+					success: function(data) {
+						if(data == 1){
+							window.location.reload();
+						}
+						else alert(data);
+						
+						
+						
+					}
+				});
+		} else {
+		return false;
+		}
+
+	});
+
 	$('#deleteSelectedCalcPrices').click(function(e){
     	e.preventDefault();
 		if (confirm("Удалить выбранные записи?")) {
@@ -300,6 +322,104 @@ $(document).ready(function () {
 			$.ajax({
 				type: "POST",
 				url: "/wp-content/themes/leto/admin/scripts/remove_many_calc_prices_ajax.php",
+				data: {ids: ids},
+				success: function(data) {
+					console.log(data);
+					if(data == 1){
+						window.location.reload();
+					}
+					else alert(data);
+				}
+			});
+		} else {
+		return false;
+		}
+
+	});
+
+	$('.cartRestore').click(function(e){
+		e.preventDefault();
+		
+		var calc_price_id = $(this).data('id');
+		$.ajax({
+			type: "POST",
+			url: "/wp-content/themes/leto/admin/scripts/restore_calc_price_ajax.php",
+			data: {calc_price_id: calc_price_id},
+			success: function(data) {
+				if(data == 1){
+					$(".tr" + calc_price_id).fadeOut();
+				}
+				else alert(data);
+			}
+		});
+	});
+
+
+	$('#restoreSelectedCalcPrices').click(function(e){
+    	e.preventDefault();
+		
+		const ids = [];
+		$( ".checkCargoInput" ).each(function() {
+			if(this.checked) {
+				ids.push($( this ).data('id'));
+		  	}
+		});
+
+		$.ajax({
+			type: "POST",
+			url: "/wp-content/themes/leto/admin/scripts/restore_many_calc_prices_ajax.php",
+			data: {ids: ids},
+			success: function(data) {
+				console.log(data);
+				if(data == 1){
+					window.location.reload();
+				}
+				else alert(data);
+			}
+		});
+		
+	});
+
+
+
+	$('.cartTotallyDelete').click(function(e){
+		e.preventDefault();
+		if (confirm("Удалить запись навсегда?")) {
+			var calc_price_id = $(this).data('id');
+			$.ajax({
+					type: "POST",
+					url: "/wp-content/themes/leto/admin/scripts/remove_calc_price_totally_ajax.php",
+					data: {calc_price_id: calc_price_id},
+					success: function(data) {
+						if(data == 1){
+							$(".tr" + calc_price_id).fadeOut();
+						}
+						else alert(data);
+						
+						
+						
+					}
+				});
+		} else {
+		return false;
+		}
+
+	});
+
+	$('#deleteSelectedCalcPricesTotally').click(function(e){
+    	e.preventDefault();
+		if (confirm("Удалить выбранные записи навсегда?")) {
+			const ids = [];
+			$( ".checkCargoInput" ).each(function() {
+				if(this.checked) {
+					ids.push($( this ).data('id'));
+			  	}
+			});
+
+
+			$.ajax({
+				type: "POST",
+				url: "/wp-content/themes/leto/admin/scripts/remove_many_calc_prices_totally_ajax.php",
 				data: {ids: ids},
 				success: function(data) {
 					console.log(data);

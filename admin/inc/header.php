@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo get_site_url();?>/wp-content/themes/leto/admin/assets/css/bootstrap.min.css" />
-<link rel="stylesheet" href="<?php echo get_site_url();?>/wp-content/themes/leto/admin/assets/css/admin.css?v=9" />
+<link rel="stylesheet" href="<?php echo get_site_url();?>/wp-content/themes/leto/admin/assets/css/admin.css?v=11" />
 <link rel="stylesheet" href="<?php echo get_site_url();?>/wp-content/themes/leto/admin/assets/css/bootstrap-datepicker.min.css" />
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

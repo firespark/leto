@@ -1,4 +1,4 @@
-<div>
+<div<?php if($is_cart) echo ' class="cart-table"';?>>
 	<table id="clients" class="table table-striped table-bordered table-hover">
 		<tr>
 			<th>Статус</th>
@@ -17,7 +17,7 @@
 			<th>utm_content</th>
 			<th class="td-wide">URL-referrer</th>
 			<th>IP пользователя</th>
-			<th></th>
+			<th<?php if($is_cart) echo ' class="td-wide"';?>></th>
 			<th><input type="checkbox" class="form-check-input" autocomplete="off" id="checkAllInputs"></th>
 			
 		</tr>
@@ -41,7 +41,16 @@
 				<td><?php echo $calc_price->utm_content;?></td>
 				<td class="td-wide"><?php echo $calc_price->utm_referrer;?></td>
 				<td style="word-break: break-all;"><?php echo $calc_price->utm_user_ip;?></td>
+
+				<?php if($is_cart):?>
+				<td class="td-wide">
+                    <a class="cartRestore" href="#" data-id="<?php echo $calc_price->id;?>">Восстановить</a>&nbsp;&nbsp;
+                    <a class="cartTotallyDelete" href="#" data-id="<?php echo $calc_price->id;?>">Удалить навсегда</a>
+                </td>
+				<?php else:?>
 				<td class="delete_calc_price" data-id="<?php echo $calc_price->id;?>"><span style="cursor: pointer">&#10008;</span></td>
+				<?php endif;?>
+
 				<td><input type="checkbox" class="checkCargoInput" autocomplete="off" data-id="<?php echo $calc_price->id;?>"></td>
 				
 			</tr>

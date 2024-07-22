@@ -1246,6 +1246,8 @@ function calc_prices_display(){
     $utm_sources = $arr['utm_sources'];
     $utm_mediums = $arr['utm_mediums'];
     $utm_campaigns = $arr['utm_campaigns'];
+
+    $is_cart = false;
  
     include 'admin/calc_prices_file.php';
 }
@@ -1262,8 +1264,10 @@ function calc_prices_cart(){
     $utm_sources = $arr['utm_sources'];
     $utm_mediums = $arr['utm_mediums'];
     $utm_campaigns = $arr['utm_campaigns'];
+
+    $is_cart = true;
  
-    include 'admin/calc_prices_file.php';
+    include 'admin/calc_prices_cart.php';
 }
 
 function calc_prices_active(){
@@ -1278,6 +1282,8 @@ function calc_prices_active(){
     $utm_sources = $arr['utm_sources'];
     $utm_mediums = $arr['utm_mediums'];
     $utm_campaigns = $arr['utm_campaigns'];
+
+    $is_cart = false;
  
     include 'admin/calc_prices_file.php';
 }
@@ -1294,6 +1300,8 @@ function calc_prices_inactive(){
     $utm_sources = $arr['utm_sources'];
     $utm_mediums = $arr['utm_mediums'];
     $utm_campaigns = $arr['utm_campaigns'];
+
+    $is_cart = false;
  
     include 'admin/calc_prices_file.php';
 }

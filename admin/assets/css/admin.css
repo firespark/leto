@@ -152,10 +152,13 @@ table#clients td.td-wide {
   word-break: break-word;
 }
 
-
-
 table#clients tr.inactive {
   background: #c1c1c1;
+}
+
+.cart-table table#clients th,
+.cart-table table#clients td {
+  border: 1px solid red;
 }
 
 .m-width-100 {

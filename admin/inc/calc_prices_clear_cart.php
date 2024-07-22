@@ -1,0 +1,1 @@
+<button id="deleteAllCalcPricesTotally" class="btn btn-danger mt-5">Очистить корзину!!!</button>
