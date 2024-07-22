@@ -140,7 +140,7 @@
 							name="dateRange" 
 							value="allTime" 
 							id="allTimeDateRange" 
-							<?php if ( (!isset($_GET['start_date']) && !$_GET['start_date']) && (!isset($_GET['end_date']) && !$_GET['end_date']) ):?>
+							<?php if ( !$_GET['start_date'] && !$_GET['end_date'] ):?>
 							checked
 							<?php endif;?>
 						> Весь период
