@@ -6,7 +6,7 @@ $(document).ready(function () {
     const clearBtn = $('#clearBtn');
     const dateRangeRadioCustom = $('#customDateRange');
     const dateRangeRadioAllTime = $('#allTimeDateRange');
-    let startDate = new Date(1900, 0, 1);
+    let startDate = new Date(0);
     let endDate = new Date();
 
     function formatDate(date) {
@@ -20,8 +20,10 @@ $(document).ready(function () {
         const params = {
             'load_capacity': $('#sel1').val(),
             'body_type': $('#sel2').val(),
-            'start_date': formatDate(startDate),
-            'end_date': formatDate(endDate),
+            //'start_date': formatDate(startDate),
+            //'end_date': formatDate(endDate),
+            'start_date': $('#startDateValue').val(),
+            'end_date': $('#endDateValue').val(),
             'utm_source': $('select[name="utm_source"]').val(),
             'utm_medium': $('select[name="utm_medium"]').val(),
             'utm_campaign': $('select[name="utm_campaign"]').val()
@@ -52,7 +54,7 @@ $(document).ready(function () {
 
     function switchToAllTimeRange() {
         dateRangeRadioAllTime.prop('checked', true);
-        startDate = new Date(1900, 0, 1);
+        startDate = new Date(0);
         endDate = new Date();
     }
 
@@ -101,6 +103,8 @@ $(document).ready(function () {
         }
         validateDates();
         switchToCustomRange();
+        $('#startDateValue').val(formatDate(startDate));
+        $('#endDateValue').val(formatDate(endDate));
     });
 
     $('input[name="dateRange"]').on('change', function () {
@@ -108,7 +112,7 @@ $(document).ready(function () {
 
         switch ($(this).val()) {
             case 'allTime':
-                startDate = new Date(1900, 0, 1);
+                startDate = new Date(0);
                 endDate = currentDate;
                 break;
             case 'lastMonth':
@@ -135,6 +139,9 @@ $(document).ready(function () {
             default:
                 return;
         }
+
+        $('#startDateValue').val(formatDate(startDate));
+        $('#endDateValue').val(formatDate(endDate));
 
         resetDateInputs();
         errorMessage.text('');

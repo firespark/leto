@@ -195,6 +195,16 @@
 			</div>
 		</div>
 	</div>
+	<input 
+		type="hidden" 
+		id="startDateValue" 
+		value="<?php echo (isset($_GET['start_date']) && $_GET['start_date']) ? $_GET['start_date'] : 0 ;?>"
+	>
+	<input 
+		type="hidden" 
+		id="endDateValue" 
+		value="<?php echo (isset($_GET['end_date']) && $_GET['end_date']) ? $_GET['end_date'] : 0 ;?>"
+	>
 	<button type="button" class="btn btn-primary" id="applyBtn">Применить</button>
 	<a type="button" class="btn btn-warning" href="/wp-admin/admin.php?page=calc_prices_view">Очистить фильтры</a>
 </div>
